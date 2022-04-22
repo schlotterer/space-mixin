@@ -45,6 +45,12 @@ $sm-xs: "(min-width: 600px) and (max-width: 991px)"; // Small - X-Small Only
 // Mobile Only
 $m: "(max-width: 599px)";
 
+/* responsive mixin useage
+ @include mixResponsive($lg-down){
+    
+ }
+*/
+
 // Responsive Mixin
 @mixin mixResponsive($class) {
   @media #{$class} {
