@@ -1,3 +1,11 @@
+/*
+MAIN SPACING MIXIN 
+This mixin is for responsive spacing - padding or margin. 
+It is designed to replicate the basic usage for padding and margin except will not take %. 
+You otherwise can use variables, px values, or auto (margin type only).
+This mixin allows for consistant spacing accoss elements that is both responsive and simple to implement.
+*/
+
 // Responsive variables
 // X-Large Only
 $xl: "(min-width: 1600px)";
