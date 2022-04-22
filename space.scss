@@ -1,0 +1,194 @@
+// Responsive variables
+// X-Large Only
+$xl: "(min-width: 1600px)";
+
+// Large Media Queries
+$lg-up: "(min-width: 1200px)"; // Large Up
+$lg-down: "(max-width: 1599px)"; // Large Down
+$lg: "(min-width: 1200px) and (max-width: 1599px)"; // Large Only
+
+// Medium Media Queries
+$md-up: "(min-width: 992px)"; // Medium Up
+$md-down: "(max-width: 1199px)"; // Medium Down
+$md: "(min-width: 992px) and (max-width: 1199px)"; // Medium Only
+
+// Small Media Queries
+$sm-up: "(min-width: 768px)"; // Small Up
+$sm-down: "(max-width: 991px)"; // Small Down
+$sm: "(min-width: 768px) and (max-width: 991px)"; // Small Only
+
+// X-Small Media Queries
+$xs-up: "(min-width: 600px)"; // X-Small Up
+$xs-down: "(max-width: 767px)"; // X-Small Down
+$xs: "(min-width: 600px) and (max-width: 767px)"; // X-Small Only
+
+// Intermediate options
+$lg-md: "(min-width: 992px) and (max-width: 1599px)"; // Large - Medium Only
+$lg-sm: "(min-width: 768px) and (max-width: 1599px)"; // Small - X-Small Only
+$lg-xs: "(min-width: 600px) and (max-width: 1599px)"; // Small - X-Small Only
+$md-sm: "(min-width: 768px) and (max-width: 1199px)"; // Medium -  Small Only
+$md-xs: "(min-width: 600px) and (max-width: 1199px)"; // Medium -  Small Only
+$sm-xs: "(min-width: 600px) and (max-width: 991px)"; // Small - X-Small Only
+
+// Mobile Only
+$m: "(max-width: 599px)";
+
+// Responsive Mixin
+@mixin mixResponsive($class) {
+  @media #{$class} {
+    @content;
+  }
+}
+
+
+/*
+MAIN SPACING MIXIN 
+This mixin is for responsive spacing. 
+It is designed to replicate the basic usage for padding and margin except will not take %. 
+You otherwise can use variables, px values, or auto (margin type only).
+At smaller sizes the mixin will compare the calculated value to a minimum value variable and make sure there is a minimum of space (unless set to 0).
+USAGE:
+default: setting the type to padding or margin is the only required info.
+The amount of space will default to $spaceBase unless otherwise set.
+The rate of decrease per breakpoint change will default to $respRatio.
+@include space(padding);
+@include space(margin);
+Examples:
+@include space(margin,$halfSpaceBase,auto);
+Note: to customize the ration you will need to supply all of the preceding options?
+@include space(padding,100px,60px,100px,60px,.7);
+See more use cases below the mixin declaration when we set some custom classes to use this.
+*/
+
+// Spacing
+$maxSpaceBase:120px;
+$spaceBase: 100px;
+$halfSpaceBase : $spaceBase / 2;
+$minSpaceBase : 20px;
+$respRatio : .8;
+
+@mixin space(
+  $type, $top:$spaceBase, 
+  $right:null, $bottom:null, 
+  $left:null, 
+  $ratio:$respRatio){
+  @if $type == 'padding' or $type == 'margin'{
+      // define fallbacks to work like normal padding and margin markup
+      @if $right == null{
+        $right : $top;
+        $bottom : $top;
+        $left : $top;
+      }
+      @if $right != null and $bottom == null{
+        $bottom : $top;
+        $left : $right;
+      }
+      @if $bottom != null and $left == null{
+        $left : $right;
+      }
+    //global setting
+      #{$type}:$top $right $bottom $left;
+    //LG sizes
+      $topLG : $top;
+      @if $top != 'auto'{$topLG : $top * $ratio;}
+      $rightLG : $right;
+      @if $right != 'auto'{$rightLG : $right * $ratio;}
+      $bottomLG : $bottom;
+      @if $bottom != 'auto'{$bottomLG : $bottom * $ratio;}
+      $leftLG : $left;
+      @if $left != 'auto'{$leftLG : $left * $ratio;}
+
+      @include mixResponsive($lg-down){
+        #{$type}:$topLG $rightLG $bottomLG $leftLG;
+      }
+
+      //MD sizes
+      $topMD : $top;
+      @if $top != 'auto'{$topMD : $topLG * $ratio;}
+      $rightMD : $right;
+      @if $right != 'auto'{$rightMD : $rightLG * $ratio;}
+      $bottomMD : $bottom;
+      @if $bottom != 'auto'{$bottomMD : $bottomLG * $ratio;}
+      $leftMD : $left;
+      @if $left != 'auto'{$leftMD : $leftLG * $ratio;}
+
+      @include mixResponsive($md-down){
+        #{$type}:$topMD $rightMD $bottomMD $leftMD;
+      }
+
+      //SM sizes
+      $topSM : $top;
+      @if $top != 'auto'{
+        $topSM : $topMD * $ratio;
+        @if $topSM <= $minSpaceBase and $top != 0{
+          $topSM : $minSpaceBase;
+        }
+      }
+      $rightSM : $right;
+      @if $right != 'auto'{
+        $rightSM : $rightMD * $ratio;
+        @if $rightSM <= $minSpaceBase and $right != 0{
+          $rightSM : $minSpaceBase;
+        }
+      }
+      $bottomSM : $bottom;
+      @if $bottom != 'auto'{
+        $bottomSM : $bottomMD * $ratio;
+        @if $bottomSM <= $minSpaceBase and $bottom != 0{
+          $bottomSM : $minSpaceBase;
+        }
+      }
+      $leftSM : $left;
+      @if $left != 'auto'{
+        $leftSM : $leftMD * $ratio;
+        @if $leftSM <= $minSpaceBase and $left != 0{
+          $leftSM : $minSpaceBase;
+        }
+      }
+      
+      @include mixResponsive($sm-down){
+        #{$type}:$topSM $rightSM $bottomSM $leftSM;
+      }
+      //XS Sizes
+      $topXS : $top;
+      @if $top != 'auto'{
+        $topXS : $topSM * $ratio;
+        @if $topXS <= $minSpaceBase and $top != 0{
+          $topXS : $minSpaceBase * 2;
+        }
+      }
+      $bottomXS : $bottom;
+      @if $bottom != 'auto'{
+        $bottomXS : $bottomSM * $ratio;
+        @if $bottomXS <= $minSpaceBase and $bottom != 0{
+          $bottomXS : $minSpaceBase * 2;
+        }
+      }
+      $rightXS : $right;
+      @if $right != 'auto' and $right != 0{
+        $rightXS : $minSpaceBase * 1.25;
+      }
+      $leftXS : $left;
+      @if $left != 'auto' and $left != 0{
+        $leftXS : $minSpaceBase * 1.25;
+        
+      }
+
+      @include mixResponsive($xs-down) {
+        #{$type}:$topXS $rightXS $bottomXS $leftXS;
+      }
+
+      $topM : $top;
+      @if $top != 0 and $top != 'auto'{$topM : $minSpaceBase * 2;}
+      $bottomM : $bottom;
+      @if $bottom != 0 and $bottom != 'auto'{ $bottomM : $minSpaceBase * 2;}
+      $rightM : $right;
+      @if $right != 0 and $right != 'auto'{$rightM : $minSpaceBase;}
+      $leftM : $left;
+      @if $left != 0 and $left != 'auto'{$leftM : $minSpaceBase;}
+
+      @include mixResponsive($m) {
+        #{$type}:$topM $rightM $bottomM $leftM;
+      }
+  }
+}
