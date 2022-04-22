@@ -6,6 +6,10 @@ You otherwise can use variables, px values, or auto (margin type only).
 This mixin allows for consistant spacing accoss elements that is both responsive and simple to implement.
 */
 
+/*
+Before we start we'll set up a resonsive breakpoint mixin and some starter size ranges as vars to use in our space mixin.
+This mixin could be replaced if you have an existing responsive breakpoint mixin.
+*/
 // Responsive variables
 // X-Large Only
 $xl: "(min-width: 1600px)";
